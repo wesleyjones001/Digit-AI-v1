@@ -6,6 +6,7 @@ import socket
 import sys
 import time
 import uuid
+import hashlib
 from _thread import *
 from multiprocessing import *
 
@@ -38,6 +39,36 @@ def init_server():
             print(str(e))
     ServerSideSocket.listen(5)
     return status
+
+
+def sha1_for_file(filename, block_size=1024):
+    sha1 = hashlib.sha1()
+    file = open(filename, "r")
+    while True:
+        data = file.read(block_size).encode()
+        if not data:
+            break
+        sha1.update(data)
+    return sha1.hexdigest()
+
+
+def compute_unique_version_id():
+    files = os.listdir("./modules")
+    tmp1 = ""
+    for file in files:
+        if file.endswith(".py"):
+            tmp1 += sha1_for_file(f"modules/{file}")
+    files = os.listdir("./common")
+    tmp2 = ""
+    for file in files:
+        if file.endswith(".py"):
+            tmp2 += sha1_for_file(f"common/{file}")
+    hash_of_modules = hashlib.sha1(tmp1.encode()).hexdigest()[0:24]
+    hash_of_common = hashlib.sha1(tmp2.encode()).hexdigest()
+    main = hashlib.sha1((sha1_for_file("main.py") + hash_of_common).encode()).hexdigest()
+
+    version_id = "SERVER_VERSION{" + main[0:8] + "}, MODULES_VERSION{" + hash_of_modules + "}"
+    return version_id
 
 
 def import_modules():
@@ -166,6 +197,7 @@ def run_cortana():
         quit(-1)
     else:
         print(f"Server initializing on port {__server_port}")
+    print("This is cortana version: ", compute_unique_version_id())
     process = Process(target=handle_connections, args=(ServerSideSocket,))
     process.start()
     while True:
