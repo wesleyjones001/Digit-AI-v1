@@ -1,3 +1,6 @@
+# Greetings module v1.0.0
+# The module enables basic greetings for the AI.
+
 from common import preprocessing as pp
 import random
 
@@ -39,7 +42,8 @@ responses = [["I'm great as always", "I am doing well. How about you?",
              ["Good afternoon.", "Great day. Keep it going. <<REACT_SMILE>>",
               "It's been good so far, keep it up! <<REACT_CHEER>>"],
              ["Good evening.", "This was a nice day.", "We did good. What are we doing tomorrow? <<REACT_SHRUG>>"],
-             ["Nice to see you to! <<REACT_WAVE>>", "We are all a happy family. <<REACT_SMILE>>", "Nice to see you to. I missed you. <<REACT_HUG>>"],
+             ["Nice to see you to! <<REACT_WAVE>>", "We are all a happy family. <<REACT_SMILE>>",
+              "Nice to see you to. I missed you. <<REACT_HUG>>"],
              ["Hello.", "Howdy.", "Hello Sir. <<REACT_SALUTE>>", "Good day.", "Hello master."]]
 
 

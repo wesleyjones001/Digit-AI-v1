@@ -46,7 +46,7 @@ def import_modules():
     for filename in files:
         if filename.endswith(".py"):
             exec(f"global {filename[0:-3]};from modules import {filename[0:-3]}")
-            print(f"Imported modules [{filename[0:-3]}]")
+            print(f"Imported module [{filename[0:-3]}]")
             modules_list.append(filename[0:-3])
 
 
