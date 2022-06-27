@@ -40,5 +40,5 @@ def eval(command:str, client_command_history:list) -> object:
 ```
 
 ## How to include a module
-It is super easy to include a module. Just copy it to the `modules` folder in the Digit directory. Digit will handel the rest.
+It is super easy to include a module. Just copy the python file to the `modules` folder in the Digit directory. Digit will handel the rest.
 
