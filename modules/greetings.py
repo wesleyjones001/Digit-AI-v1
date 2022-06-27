@@ -5,7 +5,7 @@ from common import preprocessing as pp
 import random
 
 
-def check_input(data: str) -> float:
+def check_input(data: str, memory: list) -> float:
     test = pp.process(data)
     score = 0.0
     if "hello" == test or "hey" == test:

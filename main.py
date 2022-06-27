@@ -107,10 +107,10 @@ def process_response(response):
     return output
 
 
-def check_scores(data):
+def check_scores(data, memory):
     scores = []
     for module in modules_list:
-        result = eval(f'{module}.check_input(data)')
+        result = eval(f'{module}.check_input(data, memory)')
         scores.append((module, result))
     max_value = -1
     module = ''
@@ -134,7 +134,7 @@ class CommandExecutionResult:
 
 def handle_request(connection: socket, data, client_command_memory: list):
     # Find module to use
-    score, module = check_scores(data)
+    score, module = check_scores(data, client_command_memory)
     if score == -1:
         header = create_header(default_response)
         connection.send((header + default_response).encode())
