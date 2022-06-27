@@ -109,6 +109,9 @@ def handle_request(connection: socket, data, client_command_memory: list):
         return client_command_memory
     result = eval(f'{module}.eval(data, client_command_memory)')
 
+    if result is None:
+        header = create_header(default_response)
+        connection.send((header + default_response).encode())
     header = create_header(result)
     connection.send((header + result).encode())
     client_command_memory.append(CommandExecutionResult(data, result))
