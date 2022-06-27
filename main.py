@@ -59,6 +59,7 @@ def compute_unique_version_id():
         if file.endswith(".py"):
             tmp1 += sha1_for_file(f"modules/{file}")
     files = os.listdir("./common")
+
     tmp2 = ""
     for file in files:
         if file.endswith(".py"):
