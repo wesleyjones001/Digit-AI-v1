@@ -9,12 +9,12 @@ def check_input(data: str, memory: list) -> float:
     test = pp.process(data)
     score = 0.0
     if "hello" == test or "hey" == test:
-        score += 15
+        score += 10
     if "how are you" in test:
         score += 4
     if "what up" in test:
         score += 2
-    if "great day" in test:
+    if "whats up with you " in test:
         score += 3
     if "how is your day" in test:
         score += 6
@@ -24,6 +24,12 @@ def check_input(data: str, memory: list) -> float:
         score += 7
     if "good evening" in test:
         score += 7
+    if "great morning" in test:
+        score += 5
+    if "great afternoon" in test:
+        score += 5
+    if "great evening" in test:
+        score += 5
     if "nice to see you" in test:
         score += 5
     if "long time no see" in test:
@@ -39,7 +45,7 @@ responses = [["I'm great as always", "I am doing well. How about you?",
              ["Yes. It is a great day.", "Today is great.", "Today is good, but not as great as yesterday!",
               "Indeed. Keep up the positivity."],
              ["Good morning.", "Good morning Sir.<<REACT__SALUTE>>", "Have a nice day."],
-             ["Good afternoon.", "Great day. Keep it going. <<REACT_SMILE>>",
+             ["Good afternoon.", "It's a great day. Keep it going. <<REACT_SMILE>>",
               "It's been good so far, keep it up! <<REACT_CHEER>>"],
              ["Good evening.", "This was a nice day.", "We did good. What are we doing tomorrow? <<REACT_SHRUG>>"],
              ["Nice to see you to! <<REACT_WAVE>>", "We are all a happy family. <<REACT_SMILE>>",
@@ -67,4 +73,10 @@ def eval(data, memory) -> object:
         return random.choice(responses[6])
     if "hello" == processed or "hey" == processed:
         return random.choice(responses[7])
+    if "great morning" in processed:
+        return random.choice(responses[3])
+    if "great afternoon" in processed:
+        return random.choice(responses[4])
+    if "great evening" in processed:
+        return random.choice(responses[5])
     return None
