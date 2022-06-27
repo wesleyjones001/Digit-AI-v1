@@ -7,6 +7,7 @@
 ## What is a digit module
 A digit module is a component that adds a specific functionality. For example, if I wanted to create a feature that enables Digit to turn on the lights then you would use a module.
 A module consists of two main functions. 
+
 The first is:
 ```py
 check_score(command:str, client_command_history:list)
