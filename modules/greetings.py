@@ -47,7 +47,7 @@ responses = [["I'm great as always", "I am doing well. How about you?",
              ["Hello.", "Howdy.", "Hello Sir. <<REACT_SALUTE>>", "Good day.", "Hello master."]]
 
 
-def eval(data, memory):
+def eval(data, memory) -> object:
     processed = pp.process(data)
     if "how are you" in processed:
         return random.choice(responses[0])

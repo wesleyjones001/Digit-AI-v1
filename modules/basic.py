@@ -5,6 +5,6 @@ def check_input(data: str, memory: list) -> float:
     return score
 
 
-def eval(data: str, memory: list):
+def eval(data: str, memory: list) -> object:
     if data == "":
         return ""

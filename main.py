@@ -64,7 +64,7 @@ def compute_unique_version_id():
     for file in files:
         if file.endswith(".py"):
             tmp2 += sha1_for_file(f"common/{file}")
-    hash_of_modules = hashlib.sha1(tmp1.encode()).hexdigest()[0:24]
+    hash_of_modules = hashlib.sha1(tmp1.encode()).hexdigest()[0:16]
     hash_of_common = hashlib.sha1(tmp2.encode()).hexdigest()
     main = hashlib.sha1((sha1_for_file("main.py") + hash_of_common).encode()).hexdigest()
 

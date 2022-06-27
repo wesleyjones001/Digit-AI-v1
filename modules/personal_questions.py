@@ -17,5 +17,5 @@ def check_input(data: str, memory: list) -> float:
     return score
 
 
-def eval(data, memory):
+def eval(data, memory) -> object:
     return "Personal questions coming soon!"
