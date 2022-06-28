@@ -7,6 +7,6 @@ def check_input(data: str, memory: list) -> float:
 
 def eval(data: str, memory: list) -> object:
     if "launch nuclear missiles" in data:
-        string = data[data.index("launch nuclear missiles")+len("launch nuclear missiles"):]
+        string = data[data.index("launch nuclear missiles") + len("launch nuclear missiles"):]
         return "Launching missiles at " + string.replace(" ", '')
     return None

@@ -8,6 +8,7 @@ import time
 import uuid
 import hashlib
 from _thread import *
+from glob import glob
 from multiprocessing import *
 
 manager = Manager()
@@ -53,11 +54,11 @@ def sha1_for_file(filename, block_size=1024):
 
 
 def compute_unique_version_id():
-    files = os.listdir("./modules")
+    files = [y for x in os.walk("modules") for y in glob(os.path.join(x[0], '*.py'))]
     tmp1 = ""
     for file in files:
         if file.endswith(".py"):
-            tmp1 += sha1_for_file(f"modules/{file}")
+            tmp1 += sha1_for_file(file)
     files = os.listdir("./common")
 
     tmp2 = ""
@@ -74,12 +75,16 @@ def compute_unique_version_id():
 
 def import_modules():
     global modules_list
-    files = os.listdir("modules")
+    files = [y for x in os.walk("modules") for y in glob(os.path.join(x[0], '*.py'))]
     for filename in files:
         if filename.endswith(".py"):
-            exec(f"global {filename[0:-3]};from modules import {filename[0:-3]}")
+            global_name = filename.split("/")[-1]
+            import_name = ''.join(filename.split("/")[-1]).replace("/", ".")
+            import_dir = '/'.join(filename.split("/")[0:-1]).replace("/", ".")
+            # print(f"global {global_name[0:-3]};from {import_dir} import {import_name[0:-3]}")
+            exec(f"global {global_name[0:-3]};from {import_dir} import {import_name[0:-3]}")
             print(f"Imported module [{filename[0:-3]}]")
-            modules_list.append(filename[0:-3])
+            modules_list.append(import_name[0:-3])
 
 
 def process_header(input: str):
