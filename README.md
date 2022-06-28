@@ -10,11 +10,11 @@ A module consists of two main functions.
 
 The first is:
 ```py
-check_score(command:str, client_command_history:list)
+check_score(command:str, client_command_history:list) -> float
 ```
 This second is 
 ```py
-eval(command:str, client_command_history:list)
+eval(command:str, client_command_history:list) -> float
 ```
 This first function `check_score()` is called on every command input to check if the module pertains to that command. It outputs a float to indicate how likely that module should be used. The module with the highest score output for each command is the one that will be used.
 
