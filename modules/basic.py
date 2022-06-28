@@ -8,3 +8,4 @@ def check_input(data: str, memory: list) -> float:
 def eval(data: str, memory: list) -> object:
     if data == "":
         return ""
+    return None

@@ -103,7 +103,7 @@ def create_header(input):
 
 
 def process_response(response):
-    output = json.loads(response)
+    output = response.decode()
     return output
 
 
@@ -158,10 +158,11 @@ def threaded_client(connection: socket):
     while session_active:
         try:
             response1 = connection.recv(85).decode('utf-8')
-            session_id, machine_name, remote_time, response_len = process_header(response1)
-            response2 = connection.recv(response_len)
-            new_data = process_response(response2)
-            client_command_memory = handle_request(connection, new_data, client_command_memory)
+            if len(response1) > 0:
+                session_id, machine_name, remote_time, response_len = process_header(response1)
+                response2 = connection.recv(response_len)
+                new_data = process_response(response2)
+                client_command_memory = handle_request(connection, new_data, client_command_memory)
         except Exception as ex:
             print(ex)
 

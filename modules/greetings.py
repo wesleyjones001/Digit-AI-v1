@@ -14,7 +14,7 @@ def check_input(data: str, memory: list) -> float:
         score += 4
     if "what up" in test:
         score += 2
-    if "whats up with you " in test:
+    if "whats up with you" in test:
         score += 3
     if "how is your day" in test:
         score += 6
@@ -67,16 +67,16 @@ def eval(data, memory) -> object:
         return random.choice(responses[4])
     if "good evening" in processed:
         return random.choice(responses[5])
-    if "nice to see you" in processed:
-        return random.choice(responses[6])
-    if "long time no see" in processed:
-        return random.choice(responses[6])
-    if "hello" == processed or "hey" == processed:
-        return random.choice(responses[7])
     if "great morning" in processed:
         return random.choice(responses[3])
     if "great afternoon" in processed:
         return random.choice(responses[4])
     if "great evening" in processed:
         return random.choice(responses[5])
+    if "nice to see you" in processed:
+        return random.choice(responses[6])
+    if "long time no see" in processed:
+        return random.choice(responses[6])
+    if "hello" == processed or "hey" == processed:
+        return random.choice(responses[7])
     return None
