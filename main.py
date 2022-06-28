@@ -30,7 +30,7 @@ def init_server():
     ServerSideSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     status = False
     for port in __server_ports:
-        print(f"Trying to initialize Cortana server on  port {port}...")
+        print(f"Trying to initialize Digit server on  port {port}...")
         try:
             ServerSideSocket.bind((__server_host, port))
             status = True
@@ -195,16 +195,16 @@ def exit_cleanup(*args):
         print("Exiting...")
 
 
-def run_cortana():
+def run_digit():
     global process
     status = init_server()
     import_modules()
     if not status:
-        print(f"Error initializing Cortana server on port {__server_port}.")
+        print(f"Error initializing Digit server on port {__server_port}.")
         quit(-1)
     else:
         print(f"Server initializing on port {__server_port}")
-    print("This is cortana version: ", compute_unique_version_id())
+    print("This is Digit version: ", compute_unique_version_id())
     process = Process(target=handle_connections, args=(ServerSideSocket,))
     process.start()
     while True:
@@ -216,6 +216,6 @@ def run_cortana():
 
 if __name__ == "__main__":
     try:
-        run_cortana()
+        run_digit()
     except KeyboardInterrupt as ex:
         atexit.register(exit_cleanup)
