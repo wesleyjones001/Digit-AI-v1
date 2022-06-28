@@ -15,7 +15,7 @@ manager = Manager()
 
 ServerSideSocket = None
 __server_host = "localhost"
-__server_ports = [x for x in range(1023, 1223)]
+__server_ports = [x for x in range(1023, 1050)]
 __server_port = None
 
 process = None
