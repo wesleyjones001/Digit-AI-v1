@@ -10,10 +10,13 @@ import hashlib
 from _thread import *
 from glob import glob
 from multiprocessing import *
+import ssl
 
 manager = Manager()
 
 ServerSideSocket = None
+cert_file_location = "../Digit-AI-v1/cert.pem"  # For basic auth: use the same as the client.
+private_key_location = "key.pem"  # server private key
 __server_host = "localhost"
 __server_ports = [x for x in range(1023, 1050)]
 __server_port = None
@@ -27,18 +30,20 @@ default_response = "Sorry, I don't understand."
 def init_server():
     global __server_port
     global ServerSideSocket
-    ServerSideSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     status = False
     for port in __server_ports:
         print(f"Trying to initialize Digit server on  port {port}...")
         try:
+            ServerSideSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             ServerSideSocket.bind((__server_host, port))
-            status = True
+
+            ServerSideSocket.listen(5)
             __server_port = port
+            print("Server listening:")
+            status = True
             break
         except Exception as e:
             print(str(e))
-    ServerSideSocket.listen(5)
     return status
 
 
@@ -54,7 +59,7 @@ def sha1_for_file(filename, block_size=1024):
 
 
 def compute_unique_version_id():
-    files = [y for x in os.walk("modules") for y in glob(os.path.join(x[0], '*.py'))]
+    files = [y for x in os.walk("../Digit-AI-v1/modules") for y in glob(os.path.join(x[0], '*.py'))]
     tmp1 = ""
     for file in files:
         if file.endswith(".py"):
@@ -75,7 +80,7 @@ def compute_unique_version_id():
 
 def import_modules():
     global modules_list
-    files = [y for x in os.walk("modules") for y in glob(os.path.join(x[0], '*.py'))]
+    files = [y for x in os.walk("../Digit-AI-v1/modules") for y in glob(os.path.join(x[0], '*.py'))]
     for filename in files:
         if filename.endswith(".py"):
             global_name = filename.split("/")[-1]
@@ -98,8 +103,9 @@ def process_header(input: str):
     header_len = int(input[0:a1])
     header = input[a1 + 2:header_len + 2]
     a2 = header.split("::")
-    session_id, machine_name, remote_time, response_len = a2[0], base64.b64decode(a2[1]).decode('utf-8'), a2[2], a2[3]
-    return session_id, machine_name, int(remote_time), int(response_len)
+    session_id, machine_name, remote_time, new_var, response_len = a2[0], base64.b64decode(a2[1]).decode('utf-8'), a2[
+        2], a2[3], a2[4]
+    return session_id, machine_name, int(remote_time), new_var, int(response_len)
 
 
 def create_header(input):
@@ -107,9 +113,9 @@ def create_header(input):
     machine_name = base64.b64encode("computer_1".encode()).decode()
     timestamp = round(time.time())
     content_len = len(input)
-    tmp = f"::{session_id}::{machine_name}::{timestamp}::{content_len}"
+    tmp = f"::{session_id}::{machine_name}::{timestamp}::test::{content_len}"
     output = str(len(tmp)) + tmp
-    output = output.ljust(85, '#')
+    output = output.ljust(150, '#')
     return output
 
 
@@ -163,31 +169,37 @@ def handle_request(connection: socket, data, client_command_memory: list):
 
 def threaded_client(connection: socket):
     session_active = True
-    session_id, machine_name, remote_time, response_len = None, None, None, None
+    session_id, machine_name, remote_time, new_var, response_len = None, None, None, None, None
     client_command_memory = []
-
+    i = 0
     while session_active:
         try:
-            response1 = connection.recv(85).decode('utf-8')
+            response1 = connection.recv(150).decode('utf-8')
             if len(response1) > 0:
                 start = time.time()
-                session_id, machine_name, remote_time, response_len = process_header(response1)
+                session_id, machine_name, remote_time, new_var, response_len = process_header(response1)
                 response2 = connection.recv(response_len)
                 new_data = process_response(response2)
                 client_command_memory = handle_request(connection, new_data, client_command_memory)
                 end = time.time()
-                time.sleep(0.2)
                 print(end - start, "S")
+            time.sleep(0.2)
         except Exception as ex:
-            print(ex)
+            print(str(ex))
 
 
 def handle_connections(ServerSideSocket: socket):
     while True:
         try:
             Client, address = ServerSideSocket.accept()
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            context.check_hostname = False
+            context.verify_mode = ssl.VerifyMode.CERT_OPTIONAL
+            context.load_cert_chain(certfile=cert_file_location, keyfile=private_key_location)
+
+            secureClientSocket = context.wrap_socket(Client, server_side=True)
             print('Connected to: ' + address[0] + ':' + str(address[1]))
-            start_new_thread(threaded_client, (Client,))
+            start_new_thread(threaded_client, (secureClientSocket,))
         except Exception as ex:
             print(str(ex))
 
