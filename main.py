@@ -15,7 +15,7 @@ import ssl
 manager = Manager()
 
 ServerSideSocket = None
-cert_file_location = "../Digit-AI-v1/cert.pem"  # For basic auth: use the same as the client.
+cert_file_location = "cert.pem"  # For basic auth: use the same as the client.
 private_key_location = "key.pem"  # server private key
 __server_host = "localhost"
 __server_ports = [x for x in range(1023, 1050)]
@@ -59,7 +59,7 @@ def sha1_for_file(filename, block_size=1024):
 
 
 def compute_unique_version_id():
-    files = [y for x in os.walk("../Digit-AI-v1/modules") for y in glob(os.path.join(x[0], '*.py'))]
+    files = [y for x in os.walk("modules/") for y in glob(os.path.join(x[0], '*.py'))]
     tmp1 = ""
     for file in files:
         if file.endswith(".py"):
@@ -80,7 +80,7 @@ def compute_unique_version_id():
 
 def import_modules():
     global modules_list
-    files = [y for x in os.walk("../Digit-AI-v1/modules") for y in glob(os.path.join(x[0], '*.py'))]
+    files = [y for x in os.walk("modules/") for y in glob(os.path.join(x[0], '*.py'))]
     for filename in files:
         if filename.endswith(".py"):
             global_name = filename.split("/")[-1]
