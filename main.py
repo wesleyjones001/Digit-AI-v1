@@ -69,7 +69,7 @@ def compute_unique_version_id():
     hash_of_common = hashlib.sha1(tmp2.encode()).hexdigest()
     main = hashlib.sha1((sha1_for_file("main.py") + hash_of_common).encode()).hexdigest()
 
-    version_id = "SERVER_VERSION{" + main[0:8] + "}, MODULES_VERSION{" + hash_of_modules + "}"
+    version_id = "SERVER_VERSION{" + main[0:8] + "}, MODULES_HASH{" + hash_of_modules + "}"
     return version_id
 
 
@@ -82,8 +82,14 @@ def import_modules():
             import_name = ''.join(filename.split("/")[-1]).replace("/", ".")
             import_dir = '/'.join(filename.split("/")[0:-1]).replace("/", ".")
             # print(f"global {global_name[0:-3]};from {import_dir} import {import_name[0:-3]}")
-            exec(f"global {global_name[0:-3]};from {import_dir} import {import_name[0:-3]}")
-            print(f"Imported module [{filename[0:-3]}]")
+            module_name = import_name[0:-3]
+            exec(f"global {global_name[0:-3]};from {import_dir} import {module_name}")
+            module_version = ""
+            try:
+                module_version = eval(f"{module_name}.module_version")
+            except AttributeError as ex:
+                pass
+            print(f"Imported module [{filename[0:-3]}] {module_version}")
             modules_list.append(import_name[0:-3])
 
 
@@ -164,10 +170,14 @@ def threaded_client(connection: socket):
         try:
             response1 = connection.recv(85).decode('utf-8')
             if len(response1) > 0:
+                start = time.time()
                 session_id, machine_name, remote_time, response_len = process_header(response1)
                 response2 = connection.recv(response_len)
                 new_data = process_response(response2)
                 client_command_memory = handle_request(connection, new_data, client_command_memory)
+                end = time.time()
+                time.sleep(0.2)
+                print(end - start, "S")
         except Exception as ex:
             print(ex)
 
@@ -204,7 +214,7 @@ def run_digit():
         quit(-1)
     else:
         print(f"Server initializing on port {__server_port}")
-    print("This is Digit version: ", compute_unique_version_id())
+    print("This is Digit version is:", compute_unique_version_id())
     process = Process(target=handle_connections, args=(ServerSideSocket,))
     process.start()
     while True:

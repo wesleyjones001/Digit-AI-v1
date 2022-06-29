@@ -3,6 +3,9 @@ import datetime
 from common import module_testing
 import requests
 
+global module_version
+module_version = "v1.0.0"
+
 
 def check_input(data: str, memory: list) -> float:
     score = 0
@@ -94,7 +97,6 @@ def parse_(data, sep):
 def get_location(data: str, keyword: str):
     location = None
     date_to_check = None
-    suffixes = ["today", "tomorrow", "next", "this", "on "]
     if " in " in data:
         location, date_to_check = parse_(data, " in ")
     else:
@@ -115,7 +117,6 @@ def get_location(data: str, keyword: str):
 
 def get_weather(city_name, date_to_check: datetime.date):
     api_key = "de35551fca0c4d3a8b9211105222806"
-    url = ""
     mode = 0
     if date_to_check is not None and city_name is not None:
         days_from_now = (date_to_check - datetime.date.today()).days
