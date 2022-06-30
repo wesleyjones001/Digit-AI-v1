@@ -4,6 +4,8 @@
 from common import preprocessing as pp
 import random
 
+module_version = "v1.0.0"
+
 
 def check_input(data: str, memory: list) -> float:
     test = pp.process(data)

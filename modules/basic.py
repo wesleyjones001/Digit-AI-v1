@@ -1,3 +1,6 @@
+module_version = "v1.0.0"
+
+
 def check_input(data: str, memory: list) -> float:
     score = 0
     if data == "":

@@ -1,5 +1,7 @@
 from common import preprocessing as pp
 
+module_version = "v1.0.0 Still working on it."
+
 
 def check_input(data: str, memory: list) -> float:
     test = pp.process(data)

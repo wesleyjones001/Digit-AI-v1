@@ -1,6 +1,5 @@
 import atexit
 import base64
-import json
 import os
 import socket
 import sys
@@ -15,8 +14,8 @@ import ssl
 manager = Manager()
 
 ServerSideSocket = None
-cert_file_location = "cert.pem"  # For basic auth: use the same as the client.
-private_key_location = "key.pem"  # server private key
+cert_file_location = "ssl/cert.pem"  # For basic auth: use the same as the client.
+private_key_location = "ssl/key.pem"  # server private key
 __server_host = "localhost"
 __server_ports = [x for x in range(1023, 1050)]
 __server_port = None
@@ -58,14 +57,16 @@ def sha1_for_file(filename, block_size=1024):
     return sha1.hexdigest()
 
 
+# This function is used to compute this unique version of the software and module hash. This can be used to
+# distinguish between different configurations of modules. It uses sha1 hash function.
 def compute_unique_version_id():
-    files = [y for x in os.walk("modules/") for y in glob(os.path.join(x[0], '*.py'))]
+    # Find modules recursively. Allows for organization of components.
+    files = [y for x in os.walk("modules/") for y in glob(os.path.join(x[0], '*.py'))]  # Only get python files.
     tmp1 = ""
     for file in files:
         if file.endswith(".py"):
             tmp1 += sha1_for_file(file)
     files = os.listdir("./common")
-
     tmp2 = ""
     for file in files:
         if file.endswith(".py"):
@@ -75,6 +76,8 @@ def compute_unique_version_id():
     main = hashlib.sha1((sha1_for_file("main.py") + hash_of_common).encode()).hexdigest()
 
     version_id = "SERVER_VERSION{" + main[0:8] + "}, MODULES_HASH{" + hash_of_modules + "}"
+    # Version format example:
+    # SERVER_VERSION{hash}, MODULES_HASH{hash}
     return version_id
 
 

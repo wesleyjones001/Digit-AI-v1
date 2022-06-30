@@ -1,5 +1,7 @@
 from common import module_testing
 
+module_version = "v1.0.0"
+
 
 def check_input(data: str, memory: list) -> float:
     score = 0
