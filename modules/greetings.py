@@ -40,7 +40,7 @@ def check_input(data: str, memory: list) -> float:
 
 
 responses = [["I'm great as always", "I am doing well. How about you?",
-              "Well, today I feel like I accomplished something. <<REACT_SMILE>>", "I am happy.",
+              "Well, today I feel like I accomplished something today. <<REACT_SMILE>>", "I am happy.",
               "I feel like I am learning new things."],
              ["Not much is going on. I was build to serve. <<REACT__SMILE>>", "I am happy to be here for you.",
               "The sky is up. <<REACT_LAUGH>>"],

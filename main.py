@@ -6,10 +6,10 @@ import sys
 import time
 import uuid
 import hashlib
+import ssl
 from _thread import *
 from glob import glob
 from multiprocessing import *
-import ssl
 
 manager = Manager()
 
@@ -17,7 +17,7 @@ ServerSideSocket = None
 cert_file_location = "ssl/cert.pem"  # For basic auth: use the same as the client.
 private_key_location = "ssl/key.pem"  # server private key
 __server_host = "localhost"
-__server_ports = [x for x in range(1023, 1050)]
+__server_ports = [x for x in range(1023, 1050)]  # For rapid testing purposes.
 __server_port = None
 
 process = None
@@ -113,7 +113,7 @@ def process_header(input: str):
 
 def create_header(input):
     global session_id
-    machine_name = base64.b64encode("computer_1".encode()).decode()
+    machine_name = base64.b64encode("DIGIT_SERVER_1".encode()).decode()
     timestamp = round(time.time())
     content_len = len(input)
     tmp = f"::{session_id}::{machine_name}::{timestamp}::test::{content_len}"
@@ -172,15 +172,17 @@ def handle_request(connection: socket, data, client_command_memory: list):
 
 def threaded_client(connection: socket):
     session_active = True
-    session_id, machine_name, remote_time, new_var, response_len = None, None, None, None, None
+    # session_id, machine_name, remote_time, new_var, response_len = None, None, None, None, None
     client_command_memory = []
     i = 0
+    session_id = uuid.uuid1()  # use later
+
     while session_active:
         try:
             response1 = connection.recv(150).decode('utf-8')
             if len(response1) > 0:
                 start = time.time()
-                session_id, machine_name, remote_time, new_var, response_len = process_header(response1)
+                _, machine_name, remote_time, new_var, response_len = process_header(response1)
                 response2 = connection.recv(response_len)
                 new_data = process_response(response2)
                 client_command_memory = handle_request(connection, new_data, client_command_memory)
