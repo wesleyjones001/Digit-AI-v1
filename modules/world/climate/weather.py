@@ -91,6 +91,8 @@ def parse_(data, sep):
                         return None, None
                     days = (day - datetime.date.today().weekday() + 7) % 7
                     date_to_check = datetime.date.today() + datetime.timedelta(days=days)
+    if location == "":
+        location = "New York City"
     return location, date_to_check
 
 
